@@ -9,7 +9,7 @@
      Fetch the data using `axios` or `node-fetch` and store it in the database.
 
 
-     ```
+   
 
 #### 2. **API for Listing Transactions**:
    - Create an API that lists transactions based on search and pagination.
@@ -36,5 +36,3 @@
 
     
 
-
-This approach will help you structure your solution efficiently for the given challenge.
