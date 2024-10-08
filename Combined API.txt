@@ -1,0 +1,13 @@
+app.get('/combined-data', async (req, res) => {
+  const transactions = await fetchTransactions(req);
+  const statistics = await fetchStatistics(req);
+  const barChart = await fetchBarChart(req);
+  const pieChart = await fetchPieChart(req);
+
+  res.json({
+    transactions,
+    statistics,
+    barChart,
+    pieChart
+  });
+});

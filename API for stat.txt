@@ -1,0 +1,20 @@
+app.get('/statistics', async (req, res) => {
+  const { month } = req.query;
+
+  const monthCondition = month
+    ? { dateOfSale: { $month: new Date(`${month}-01`).getMonth() + 1 } }
+    : {};
+
+  const soldItems = await Product.countDocuments({ sold: true, ...monthCondition });
+  const notSoldItems = await Product.countDocuments({ sold: false, ...monthCondition });
+  const totalSale = await Product.aggregate([
+    { $match: { sold: true, ...monthCondition } },
+    { $group: { _id: null, totalAmount: { $sum: '$price' } } }
+  ]);
+
+  res.json({
+    totalSale: totalSale[0]?.totalAmount || 0,
+    soldItems,
+    notSoldItems
+  });
+});

@@ -1,0 +1,23 @@
+app.get('/bar-chart', async (req, res) => {
+  const { month } = req.query;
+
+  const monthCondition = month
+    ? { dateOfSale: { $month: new Date(`${month}-01`).getMonth() + 1 } }
+    : {};
+
+  const priceRanges = [
+    { range: '0-100', min: 0, max: 100 },
+    { range: '101-200', min: 101, max: 200 },
+    // Add more ranges here
+  ];
+
+  const barChart = await Promise.all(priceRanges.map(async range => {
+    const count = await Product.countDocuments({
+      price: { $gte: range.min, $lte: range.max },
+      ...monthCondition
+    });
+    return { range: range.range, count };
+  }));
+
+  res.json(barChart);
+});

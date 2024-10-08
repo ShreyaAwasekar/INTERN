@@ -1,0 +1,14 @@
+app.get('/pie-chart', async (req, res) => {
+  const { month } = req.query;
+
+  const monthCondition = month
+    ? { dateOfSale: { $month: new Date(`${month}-01`).getMonth() + 1 } }
+    : {};
+
+  const pieChart = await Product.aggregate([
+    { $match: monthCondition },
+    { $group: { _id: '$category', count: { $sum: 1 } } }
+  ]);
+
+  res.json(pieChart);
+});
